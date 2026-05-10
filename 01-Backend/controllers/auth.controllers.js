@@ -19,18 +19,26 @@ const registerUser = async (req, res) => {
   const hashedPW = await bcrypt.hash(password, salt);
 
   // User speichern
-  const user = (await User.create({ ...req.body, password: hashedPW })).toObject();
+  const user = (
+    await User.create({ ...req.body, password: hashedPW })
+  ).toObject();
   delete user.password;
 
-  const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN_DAYS + 'd',
-  });
+  const token = jwt.sign(
+    { _id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN_DAYS + 'd',
+    }
+  );
 
   res.cookie('token', token, {
     httpOnly: true,
     secure,
-    sameSite: 'lax',
-    expires: new Date(Date.now() + Number(process.env.JWT_EXPIRES_IN_DAYS) * 24 * 60 * 60 * 1000),
+    sameSite: 'none',
+    expires: new Date(
+      Date.now() + Number(process.env.JWT_EXPIRES_IN_DAYS) * 24 * 60 * 60 * 1000
+    ),
   });
 
   res.json({ msg: 'Registered', data: user });
@@ -53,15 +61,21 @@ const login = async (req, res) => {
   // JWT
   delete user.password;
 
-  const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN_DAYS + 'd',
-  });
+  const token = jwt.sign(
+    { _id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN_DAYS + 'd',
+    }
+  );
 
   res.cookie('token', token, {
     httpOnly: true,
     secure,
-    sameSite: 'lax',
-    expires: new Date(Date.now() + Number(process.env.JWT_EXPIRES_IN_DAYS) * 24 * 60 * 60 * 1000),
+    sameSite: 'none',
+    expires: new Date(
+      Date.now() + Number(process.env.JWT_EXPIRES_IN_DAYS) * 24 * 60 * 60 * 1000
+    ),
   });
 
   res.json({ msg: 'Logged in', data: user });
@@ -71,7 +85,7 @@ const logout = (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
     secure,
-    sameSite: 'lax',
+    sameSite: 'none',
   });
   res.json({ msg: 'Logout successful' });
 };
