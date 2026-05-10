@@ -103,7 +103,7 @@ const AuthContextProvider = ({ children }) => {
       }
     };
     refresh();
-  }, [navigate]);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, setUser, signup, login, logout, isRefreshing }}>

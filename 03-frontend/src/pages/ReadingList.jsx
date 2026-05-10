@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { ToasterContext } from '../contexts/ToasterContext';
-
+import { AuthContext } from '../contexts/AuthContext';
 const bookStatus = ['read', 'pending', 'wishlist'];
 
 const ReadingList = () => {
@@ -11,7 +11,9 @@ const ReadingList = () => {
   useEffect(() => {
     const fetchReadingList = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/users/${user._id}`);
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/users/${user._id}`
+        );
         const { data, message } = await res.json();
         if (!res.ok) throw new Error(message);
         setBooks(data.readingList);
@@ -31,15 +33,15 @@ const ReadingList = () => {
           const { title, author, description, _id } = book.bookRefId;
           const statuses = bookStatus.filter((s) => s !== book.status);
           return (
-            <div key={book._id} className='card card-dash bg-base-100 w-96'>
-              <div className='card-body'>
-                <h2 className='card-title'>{title}</h2>
+            <div key={book._id} className="card card-dash bg-base-100 w-96">
+              <div className="card-body">
+                <h2 className="card-title">{title}</h2>
                 <p>{author}</p>
                 <p>{description}</p>
-                <div className='card-actions justify-end'>
+                <div className="card-actions justify-end">
                   <select
                     value={book.status}
-                    className='select select-accent capitalize'
+                    className="select select-accent capitalize"
                     onChange={(e) => alert('HANDLE STATUS CHANGE')}
                   >
                     <option disabled={true}>{book.status}</option>
